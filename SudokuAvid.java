@@ -1,8 +1,7 @@
 import java.io.*;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.Iterator;
 
 public class SudokuAvid {
     private static final int DIMENSIO = 9;
@@ -160,7 +159,7 @@ public class SudokuAvid {
         }
     }
 
-    private void mirarQuadrat(HashSet<Candidat> candidats, Posicio posicio) {
+    private void mirarQuadrat(LinkedHashSet<Candidat> candidats, Posicio posicio) {
         int quadrat = posicio.getQuadrat();
         int fila, columna;
 
@@ -176,35 +175,44 @@ public class SudokuAvid {
         while(fila < limitFiles) {
             columna = aux;
             while(columna < limitCols) {
-                if(matriu[fila][columna]!=0) candidats.remove(new Candidat(matriu[fila][columna]));
+                if(matriu[fila][columna]!=0) eliminarCandidat(matriu[fila][columna], candidats);
                 columna++;
             }
             fila++;
         }
     }
 
-    private void mirarColumna(HashSet<Candidat> candidats, Posicio posicio) {
+    private void mirarColumna(LinkedHashSet<Candidat> candidats, Posicio posicio) {
         int fila = 0;
         int columna = posicio.getColumna(), actual;
 
         while(fila < DIMENSIO){
             actual = matriu[fila][columna];
-            if(actual != 0) candidats.remove(new Candidat(matriu[fila][columna]));
+            if(actual != 0) eliminarCandidat(actual, candidats);
             fila++;
         }
     }
 
-    private void mirarFila(HashSet<Candidat> candidats, Posicio posicio) {
+    private void mirarFila(LinkedHashSet<Candidat> candidats, Posicio posicio) {
         int fila = posicio.getFila();
         int columna = 0, actual;
 
         while(columna < DIMENSIO){
             actual = matriu[fila][columna];
-            if(actual != 0) candidats.remove(new Candidat(matriu[fila][columna]));
+            if(actual != 0) eliminarCandidat(actual, candidats);
             columna++;
+
         }
     }
 
+    private void eliminarCandidat(int actual, LinkedHashSet<Candidat> candidats) {
+        Candidat escollit = null;
+        for(Candidat c: candidats) {
+            if(c.getValor() == actual)
+               escollit = c;
+        }
+        candidats.remove(escollit);
+    }
     private boolean hiHaSolucio() {
         for(int i = 0 ; i < DIMENSIO; i++)
             for(int j = 0 ; j < DIMENSIO; j++)

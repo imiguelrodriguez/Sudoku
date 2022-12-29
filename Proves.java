@@ -4,7 +4,7 @@ public class Proves {
     public static void main(String[] args) {
         SudokuAvid sudAv = new SudokuAvid();
         try {
-            sudAv.inicialitzarMatriu("sudoku.csv");
+            sudAv.inicialitzarMatriu("sudoku2.csv");
         } catch (IOException e) {
             System.out.println("Error en el fitxer.");
         }
