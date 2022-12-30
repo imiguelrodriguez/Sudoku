@@ -115,7 +115,7 @@ public class SudokuAvid {
         Candidat millor = null;
         for(Candidat c : candidats){
             if(millor==null) millor = c;
-            else if (millor.getPrioritat() < c.getPrioritat()) {
+            else if ((millor.getRatioC() > c.getRatioC())||(millor.getRatioF() > c.getRatioF())){
                 millor = c;
             }
         }
@@ -123,23 +123,33 @@ public class SudokuAvid {
     }
 
     private void crearPrioritats(LinkedHashSet<Candidat> candidats, Posicio posicio) {
+        int caselles = 0;
         for(int col = 0; col < DIMENSIO; col++){
             if(col != posicio.getColumna()){
                 if(matriu[posicio.getFila()][col]==0){
-                    prioritatsQuadrat(candidats, new Posicio(posicio.getFila(), col));
+                    caselles++;
+                    prioritatsQuadrat(candidats, new Posicio(posicio.getFila(), col), "c");
                 }
             }
         }
+        for(Candidat c : candidats){
+            c.setRatioC(caselles);
+        }
+        caselles = 0;
         for(int fil = 0; fil < DIMENSIO; fil++){
             if(fil != posicio.getFila()){
                 if(matriu[fil][posicio.getColumna()]==0){
-                    prioritatsQuadrat(candidats, new Posicio(fil, posicio.getColumna()));
+                    caselles++;
+                    prioritatsQuadrat(candidats, new Posicio(fil, posicio.getColumna()), "f");
                 }
             }
         }
+        for(Candidat c : candidats){
+            c.setRatioF(caselles);
+        }
     }
 
-    private void prioritatsQuadrat(LinkedHashSet<Candidat> candidats, Posicio posicio) {
+    private void prioritatsQuadrat(LinkedHashSet<Candidat> candidats, Posicio posicio, String seccio) {
         int fil = (posicio.getFila() / 3) * 3;
         int col = (posicio.getColumna() / 3) * 3;
         Iterator it = candidats.iterator();
@@ -150,8 +160,39 @@ public class SudokuAvid {
                         Candidat c = (Candidat) it.next();
                         if(c.getValor() == matriu[i][j]) {
                             c.incPrioritat();
+                            c.setIncrement(true);
                         }
-
+                    }
+                    it = candidats.iterator();
+                }
+            }
+        }
+        if(seccio.equals("f")){
+            for(col = 0; col < DIMENSIO; col++){
+                if(matriu[posicio.getFila()][col] != 0){
+                    while(it.hasNext()){
+                        Candidat c = (Candidat) it.next();
+                        if(c.getValor() == matriu[posicio.getFila()][col]){
+                            if(!c.isIncrement()) {
+                                c.incPrioritat();
+                            }else {
+                                c.setIncrement(false);
+                            }
+                        }
+                    }
+                    it = candidats.iterator();
+                }
+            }
+        }else{
+            for(fil = 0; fil < DIMENSIO; fil++){
+                if(matriu[fil][posicio.getColumna()] != 0){
+                    while(it.hasNext()){
+                        Candidat c = (Candidat) it.next();
+                        if(c.getValor() == matriu[fil][posicio.getColumna()] && !c.isIncrement()) {
+                            c.incPrioritat();
+                        }else{
+                            c.setIncrement(false);
+                        }
                     }
                     it = candidats.iterator();
                 }
