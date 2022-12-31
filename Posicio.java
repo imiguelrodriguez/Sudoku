@@ -67,4 +67,8 @@ public class Posicio {
         else if(this.fila < 8) return new Posicio(this.fila + 1, 0);
         else return null;
     }
+
+    public boolean comparar(int fila, int col) {
+        return fila==this.fila && col==this.columna;
+    }
 }

@@ -8,7 +8,7 @@ public class Proves {
         } catch (IOException e) {
             System.out.println("Error en el fitxer.");
         }
-        //sudAv.solucionaAvid();
+        sudAv.solucionaAvid();
         Eines.mostrarMatriu(sudAv.getMatriu());
     }
 }

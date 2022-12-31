@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 
 public class SudokuAvidVersioNova {
@@ -84,7 +85,7 @@ public class SudokuAvidVersioNova {
         if(posicions == null)
             return false;
         else{
-
+            actualitzarQuadrat(posicions, fila, columna);
             return true;
         }
     }
@@ -106,7 +107,7 @@ public class SudokuAvidVersioNova {
         if(posicions == null)
             return false;
         else{
-
+            actualitzarColumna(posicions);
             return true;
         }
     }
@@ -133,12 +134,59 @@ public class SudokuAvidVersioNova {
         }
     }
 
+    private void actualitzarQuadrat(Posicio[] posicions, int fil, int columna) {
+        for(int fila=fil; fila<fil+3; fila++){
+            for(int col=columna; col<columna+3; col++){
+                boolean mateix=false;
+                for(Posicio p:posicions){
+                    if(p.comparar(fila,col)) {
+                        mateix = true;
+                        break;
+                    }
+                }
+                if(!mateix){
+                    Iterator it= matriu[posicions[0].getFila()][posicions[0].getColumna()].iterator();
+                    while(it.hasNext()){
+                        matriu[fila][col].remove(it.next());
+                    }
+                }
+            }
+        }
+    }
+
+    private void actualitzarColumna(Posicio[] posicions) {
+        int col = posicions[0].getFila();
+        for(int fila=0; fila<DIMENSIO; fila++){
+            boolean mateix=false;
+            for(Posicio p:posicions){
+                if(p.comparar(fila,col)) {
+                    mateix = true;
+                    break;
+                }
+            }
+            if(!mateix){
+                Iterator it= matriu[posicions[0].getFila()][posicions[0].getColumna()].iterator();
+                while(it.hasNext()){
+                    matriu[fila][col].remove(it.next());
+                }
+            }
+        }
+    }
+
     private void actualitzarFila(Posicio[] posicions) {
         int fila = posicions[0].getFila();
         for(int col=0; col<DIMENSIO; col++){
+            boolean mateix=false;
             for(Posicio p:posicions){
-                if(p.comparar(fila,col)){
-
+                if(p.comparar(fila,col)) {
+                    mateix = true;
+                    break;
+                }
+            }
+            if(!mateix){
+                Iterator it= matriu[posicions[0].getFila()][posicions[0].getColumna()].iterator();
+                while(it.hasNext()){
+                    matriu[fila][col].remove(it.next());
                 }
             }
         }
