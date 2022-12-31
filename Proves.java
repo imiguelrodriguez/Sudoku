@@ -2,13 +2,13 @@ import java.io.IOException;
 
 public class Proves {
     public static void main(String[] args) {
-        SudokuAvid sudAv = new SudokuAvid();
+        SudokuAvidVersioNova sudAv = new SudokuAvidVersioNova();
         try {
             sudAv.inicialitzarMatriu("sudoku.csv");
         } catch (IOException e) {
             System.out.println("Error en el fitxer.");
         }
-        sudAv.solucionaAvid();
+        //sudAv.solucionaAvid();
         Eines.mostrarMatriu(sudAv.getMatriu());
     }
 }
