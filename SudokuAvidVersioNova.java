@@ -221,9 +221,9 @@ public class SudokuAvidVersioNova {
             for(int j=0; j<DIMENSIO; j++){
                 if(matriu[i][j].size()>1){
                     posicio = new Posicio(i, j);
-                    canvi = canvi || mirarFila(matriu[i][j], posicio);
-                    canvi = canvi || mirarColumna(matriu[i][j], posicio);
-                    canvi = canvi || mirarQuadrat(matriu[i][j], posicio);
+                    canvi = mirarFila(matriu[i][j], posicio) || canvi;
+                    canvi = mirarColumna(matriu[i][j], posicio) || canvi;
+                    canvi = mirarQuadrat(matriu[i][j], posicio) || canvi;
                 }
             }
         }
