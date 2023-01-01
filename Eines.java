@@ -46,7 +46,11 @@ public class Eines {
         for(int i = 0; i < matriu[0].length; i++) {
             System.out.println();
             for (int j = 0; j < matriu[0].length; j++)
-                System.out.print(matriu[i][j].iterator().next() + "\t");
+                if(matriu[i][j].size()==1)
+                    System.out.print(matriu[i][j].iterator().next() + "\t");
+                else
+                    System.out.print("0\t");
         }
+        System.out.println();
     }
 }

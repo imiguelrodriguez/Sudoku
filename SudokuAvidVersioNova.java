@@ -32,14 +32,15 @@ public class SudokuAvidVersioNova {
         boolean solucio = false;
         boolean canvi;
         while(!solucio) {
-            canvi = false;
-            while(!canvi) {
+            canvi = true;
+            while(canvi) {
                 // Determinar candidatos de cada celda
                 canvi = actualitzarCandidats();
+                Eines.mostrarMatriu(matriu);
             }
             // Si no funciona, preemptive sets rows, columns y sub board
             buscarPreemptiveSets();
-
+            Eines.mostrarMatriu(matriu);
             solucio = hiHaSolucio();
         }
     }
@@ -74,7 +75,7 @@ public class SudokuAvidVersioNova {
             for(int col=columna; col<columna+3 && cont < posicions.length; col++) {
                 if (matriu[fil][col].size() != 1) {
                     caselles++;
-                    if (matriu[fil][col].size() == candidats.size() && matriu[fil][col].equals(candidats)) {
+                    if (matriu[fil][col].size() == candidats.size() && comparar(matriu[fil][col], candidats)) {
                         posicions[cont] = new Posicio(fil, col);
                         cont++;
                     }
@@ -97,7 +98,7 @@ public class SudokuAvidVersioNova {
         for(int fila=0; fila < DIMENSIO && cont < posicions.length; fila++){
             if(matriu[fila][columna].size()!=1){
                 caselles++;
-                if(matriu[fila][columna].size()==candidats.size() && matriu[fila][columna].equals(candidats)){
+                if(matriu[fila][columna].size()==candidats.size() && comparar(matriu[fila][columna], candidats)){
                     posicions[cont] = new Posicio(fila, columna);
                     cont++;
                 }
@@ -107,9 +108,19 @@ public class SudokuAvidVersioNova {
         if(posicions == null)
             return false;
         else{
+            for(Posicio p:posicions)
+                System.out.println(p.getFila() + " " + p.getColumna());
             actualitzarColumna(posicions);
             return true;
         }
+    }
+
+    private boolean comparar(LinkedHashSet<Integer> posicio, LinkedHashSet<Integer> candidats) {
+        boolean mateix = true;
+        for(Integer i:posicio){
+            mateix = mateix && candidats.contains(i);
+        }
+        return mateix;
     }
 
     private boolean preemptiveFila(LinkedHashSet<Integer> candidats, int fila, int conjunt) {
@@ -119,7 +130,7 @@ public class SudokuAvidVersioNova {
         for(int columna=0; columna < DIMENSIO && cont < posicions.length; columna++){
             if(matriu[fila][columna].size()!=1){
                 caselles++;
-                if(matriu[fila][columna].size()==candidats.size() && matriu[fila][columna].equals(candidats)){
+                if(matriu[fila][columna].size()==candidats.size() && comparar(matriu[fila][columna], candidats)){
                     posicions[cont] = new Posicio(fila, columna);
                     cont++;
                 }
@@ -144,7 +155,7 @@ public class SudokuAvidVersioNova {
                         break;
                     }
                 }
-                if(!mateix){
+                if(!mateix && matriu[fila][col].size()!=1){
                     Iterator it= matriu[posicions[0].getFila()][posicions[0].getColumna()].iterator();
                     while(it.hasNext()){
                         matriu[fila][col].remove(it.next());
@@ -155,7 +166,7 @@ public class SudokuAvidVersioNova {
     }
 
     private void actualitzarColumna(Posicio[] posicions) {
-        int col = posicions[0].getFila();
+        int col = posicions[0].getColumna();
         for(int fila=0; fila<DIMENSIO; fila++){
             boolean mateix=false;
             for(Posicio p:posicions){
@@ -164,7 +175,7 @@ public class SudokuAvidVersioNova {
                     break;
                 }
             }
-            if(!mateix){
+            if(!mateix && matriu[fila][col].size()!=1){
                 Iterator it= matriu[posicions[0].getFila()][posicions[0].getColumna()].iterator();
                 while(it.hasNext()){
                     matriu[fila][col].remove(it.next());
@@ -183,7 +194,7 @@ public class SudokuAvidVersioNova {
                     break;
                 }
             }
-            if(!mateix){
+            if(!mateix && matriu[fila][col].size()!=1){
                 Iterator it= matriu[posicions[0].getFila()][posicions[0].getColumna()].iterator();
                 while(it.hasNext()){
                     matriu[fila][col].remove(it.next());
@@ -199,7 +210,7 @@ public class SudokuAvidVersioNova {
     private boolean hiHaSolucio() {
         for(int i = 0 ; i < DIMENSIO; i++)
             for(int j = 0 ; j < DIMENSIO; j++)
-                if(matriu[i][j].iterator().next()==0) return false;
+                if(matriu[i][j].size()!=1) return false;
         return true;
     }
 
@@ -225,8 +236,9 @@ public class SudokuAvidVersioNova {
 
         for(int f = fila; f< fila+3; f++) {
             for (int c = columna; c < columna + 3; c++) {
-                if(matriu[f][c].size() == 1){
-                    candidats.remove(matriu[f][c].iterator().next());
+                if(matriu[f][c].size() == 1 && !(f== posicio.getFila() && c== posicio.getColumna())){
+                    Iterator it = matriu[f][c].iterator();
+                    candidats.remove(it.next());
                 }
             }
         }
@@ -237,8 +249,9 @@ public class SudokuAvidVersioNova {
         int fila = 0, columna = posicio.getColumna();
 
         while(fila < DIMENSIO){
-            if(matriu[fila][columna].size() == 1){
-                candidats.remove(matriu[fila][columna].iterator().next());
+            if(matriu[fila][columna].size() == 1 && fila!=posicio.getFila()){
+                Iterator it = matriu[fila][columna].iterator();
+                candidats.remove(it.next());
             }
             fila++;
         }
@@ -249,8 +262,9 @@ public class SudokuAvidVersioNova {
         int fila = posicio.getFila(), columna = 0;
 
         while(columna < DIMENSIO){
-            if(matriu[fila][columna].size() == 1){
-                candidats.remove(matriu[fila][columna].iterator().next());
+            if(matriu[fila][columna].size() == 1 && columna!=posicio.getColumna()){
+                Iterator it = matriu[fila][columna].iterator();
+                candidats.remove(it.next());
             }
             columna++;
         }
@@ -265,4 +279,5 @@ public class SudokuAvidVersioNova {
         }
         candidats.remove(escollit);
     }
+
 }
