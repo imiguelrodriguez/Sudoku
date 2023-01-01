@@ -7,6 +7,11 @@ public class Posicio {
         this.columna = columna;
     }
 
+    public Posicio(int fila, int columna, int dimensio) {
+        this.fila = fila + columna / dimensio;
+        this.columna = columna % dimensio;
+    }
+
     public int getFila() {
         return fila;
     }
