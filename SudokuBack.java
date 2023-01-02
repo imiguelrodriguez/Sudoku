@@ -13,28 +13,34 @@ public class SudokuBack {
         Eines.llegirMatriu(fitxer, matriu);
     }
 
-    public void solucionaBacktracking(Posicio posicio) {
+    public boolean solucionaBacktracking(Posicio posicio) {
         int fila = posicio.getFila(), columna = posicio.getColumna();
 
-        if(!matriu[fila][columna].isFixa())
-            matriu[fila][columna].setValor(1);
-        do{
+        // si ja hem arribat al final de la matriu ja hem acabat, retornem per no fer més backtracking
+        if (posicio.comparar(8, 8)) {
+            Eines.mostrarMatriu(matriu);
+            return true;
+        }
+        if(matriu[fila][columna].isFixa()) { // si la posició ja té un valor fix, passem al següent
+            Posicio aux = new Posicio(fila, columna + 1, DIMENSIO);
+            return solucionaBacktracking(aux);
+        }
+        for(int num = 1; num < 10; num++) {
+            matriu[fila][columna].setValor(num);
+            matriu[fila][columna].setFixa(true);
             System.out.println(fila + " " + columna + " Valor: " + matriu[fila][columna].getValor());
+
             if(esFactible(posicio)) {
-                if (posicio.comparar(8, 8)) {
-                    Eines.mostrarMatriu(matriu);
-                } else {
-                    Posicio aux = new Posicio(fila, columna + 1, DIMENSIO);
-                    solucionaBacktracking(aux);
-                    if(!matriu[aux.getFila()][aux.getColumna()].isFixa())
-                        matriu[aux.getFila()][aux.getColumna()].setValor(0);
-                }
+                 // assignar el valor a la cel·la
+                Posicio aux = new Posicio(fila, columna + 1, DIMENSIO);
+                if(solucionaBacktracking(aux)) return true;
+
             }
-            if(matriu[fila][columna].isFixa())
-                break;
-            else
-                matriu[fila][columna].setValor(matriu[fila][columna].getValor()+1);
-        }while(matriu[fila][columna].getValor() <= 9);
+                matriu[fila][columna].setValor(0); // tornar enrere per si ens hem equivocat
+                matriu[fila][columna].setFixa(false);
+        }
+
+        return false;
     }
 
     private boolean esFactible(Posicio posicio) {
@@ -45,10 +51,10 @@ public class SudokuBack {
         boolean factible = true;
         int fila = (posicio.getFila()/3)*3;
         int columna = (posicio.getColumna()/3)*3;
-        for(int fil=fila; fil<fila+3; fil++){
-            for(int col=columna; col<columna+3; col++){
-                if(matriu[fil][col].getValor()==matriu[posicio.getFila()][col].getValor())
-                    factible = true;
+        for(int fil=fila; fil<fila+3 && factible; fil++){
+            for(int col=columna; col<columna+3 && factible; col++){
+                if(fil != posicio.getFila() && col != posicio.getColumna() && matriu[fil][col].getValor()==matriu[posicio.getFila()][col].getValor())
+                    factible = false;
             }
         }
         return factible;
@@ -57,8 +63,8 @@ public class SudokuBack {
     private boolean revisarColumna(Posicio posicio) {
         boolean factible = true;
         int col = posicio.getColumna();
-        for(int fil = 0; fil < posicio.getFila() && factible; fil++){
-            if(matriu[fil][col].getValor()==matriu[posicio.getFila()][col].getValor())
+        for(int fil = 0; fil < DIMENSIO && factible; fil++){
+            if(fil != posicio.getFila() && matriu[fil][col].getValor()==matriu[posicio.getFila()][col].getValor())
                 factible = false;
         }
         return factible;
@@ -67,8 +73,8 @@ public class SudokuBack {
     private boolean revisarFila(Posicio posicio) {
         boolean factible = true;
         int fil = posicio.getFila();
-        for(int col = 0; col < posicio.getColumna() && factible; col++){
-            if(matriu[fil][col].getValor()==matriu[fil][posicio.getColumna()].getValor())
+        for(int col = 0; col < DIMENSIO && factible; col++){
+            if(col != posicio.getColumna() && matriu[fil][col].getValor()==matriu[fil][posicio.getColumna()].getValor())
                 factible = false;
         }
         return factible;

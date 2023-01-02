@@ -4,7 +4,7 @@ public class CandidatBack {
 
     public CandidatBack(int valor) {
         this.valor = valor;
-        fixa = valor == 0 ? false:true;
+        fixa = valor != 0;
     }
 
     public int getValor() {
@@ -17,5 +17,9 @@ public class CandidatBack {
 
     public boolean isFixa() {
         return fixa;
+    }
+
+    public void setFixa(boolean fixa) {
+        this.fixa = fixa;
     }
 }
