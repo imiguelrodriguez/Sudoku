@@ -2,17 +2,11 @@ import java.io.IOException;
 
 public class Proves {
     public static void main(String[] args) {
-
-
-        String fitxer = "";
-
-        //MENU
-
-        String opcio;
+        String fitxer, opcio;
         do {
             Eines.mostrarMenu();
             opcio = teclat.next();
-            switch (opcio) {
+            switch(opcio) {
                 case "1": fitxer = Eines.demanarFitxer(teclat);
                     SudokuAvid sudAv = new SudokuAvid();
                     try {
