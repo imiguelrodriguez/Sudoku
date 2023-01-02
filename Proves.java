@@ -44,8 +44,10 @@ public class Proves {
                 default: System.out.println("Opció no vàlida.");
                     break;
             }
-            System.out.println("\nPrem qualsevol tecla + ENTER per a continuar...");
-            opcio = teclat.next();
+            if(!opcio.equals("4")) {
+                System.out.println("\nPrem qualsevol tecla + ENTER per a continuar...");
+                teclat.next();
+            }
         } while(!opcio.equals("4"));
     }
 }
