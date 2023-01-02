@@ -2,22 +2,54 @@ import java.io.IOException;
 
 public class Proves {
     public static void main(String[] args) {
-        /*SudokuAvidVersioNova sudAv = new SudokuAvidVersioNova();
-        try {
-            sudAv.inicialitzarMatriu("sudoku2.csv");
-        } catch (IOException e) {
-            System.out.println("Error en el fitxer.");
-        }
-        sudAv.solucionaAvid();
-        Eines.mostrarMatriu(sudAv.getMatriu());*/
 
-        SudokuBack sudBa = new SudokuBack();
-        try {
-            sudBa.inicialitzarMatriu("sudoku4.csv");
-        } catch (IOException e) {
-            System.out.println("Error en el fitxer.");
-        }
-        sudBa.solucionaBacktracking(new Posicio(0,0));
-        //Eines.mostrarMatriu(sudBa.getMatriu());
+
+        String fitxer = "";
+
+        //MENU
+
+        String opcio;
+        do {
+            Eines.mostrarMenu();
+            opcio = teclat.next();
+            switch (opcio) {
+                case "1": fitxer = Eines.demanarFitxer(teclat);
+                    SudokuAvid sudAv = new SudokuAvid();
+                    try {
+                        sudAv.inicialitzarMatriu(fitxer);
+                        System.out.println("Sudoku a resoldre:");
+                        Eines.mostrarMatriu(sudAv.getMatriu());
+                        if(sudAv.solucionaAvid()) {
+                            System.out.println("\nSudoku resolt:");
+                            Eines.mostrarMatriu(sudAv.getMatriu());
+                        }else
+                            System.out.println("\nNo s'ha trobat una solució.");
+                    } catch (IOException e) {
+                        System.out.println("Error en el fitxer.");
+                    }
+                    break;
+                case "2": fitxer = Eines.demanarFitxer(teclat);
+                    SudokuBacktracking sudBa = new SudokuBacktracking();
+                    try {
+                        sudBa.inicialitzarMatriu(fitxer);
+                        System.out.println("Sudoku a resoldre:");
+                        Eines.mostrarMatriu(sudBa.getMatriu());
+                        if(!sudBa.solucionaBacktracking(new Posicio(0,0)))
+                            System.out.println("\nNo s'ha trobat una solució.");
+                    } catch (IOException e) {
+                        System.out.println("Error en el fitxer.");
+                    }
+                    break;
+                case "3": System.out.println("Obrint interfície gràfica...");
+                    new SudokuWindow();
+                    break;
+                case "4": System.out.println("Sortint del programa...");
+                    break;
+                default: System.out.println("Opció no vàlida.");
+                    break;
+            }
+            System.out.println("\nPrem qualsevol tecla + ENTER per a continuar...");
+            opcio = teclat.next();
+        } while(!opcio.equals("4"));
     }
 }
