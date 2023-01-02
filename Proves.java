@@ -13,11 +13,11 @@ public class Proves {
 
         SudokuBack sudBa = new SudokuBack();
         try {
-            sudBa.inicialitzarMatriu("sudoku1.csv");
+            sudBa.inicialitzarMatriu("sudoku4.csv");
         } catch (IOException e) {
             System.out.println("Error en el fitxer.");
         }
         sudBa.solucionaBacktracking(new Posicio(0,0));
-        Eines.mostrarMatriu(sudBa.getMatriu());
+        //Eines.mostrarMatriu(sudBa.getMatriu());
     }
 }

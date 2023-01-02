@@ -16,28 +16,26 @@ public class SudokuBack {
     public boolean solucionaBacktracking(Posicio posicio) {
         int fila = posicio.getFila(), columna = posicio.getColumna();
 
-        // si ja hem arribat al final de la matriu ja hem acabat, retornem per no fer més backtracking
-        if (posicio.comparar(8, 8)) {
-            Eines.mostrarMatriu(matriu);
-            return true;
-        }
-        if(matriu[fila][columna].isFixa()) { // si la posició ja té un valor fix, passem al següent
-            Posicio aux = new Posicio(fila, columna + 1, DIMENSIO);
-            return solucionaBacktracking(aux);
-        }
         for(int num = 1; num < 10; num++) {
-            matriu[fila][columna].setValor(num);
-            matriu[fila][columna].setFixa(true);
-            System.out.println(fila + " " + columna + " Valor: " + matriu[fila][columna].getValor());
-
+            if(!matriu[fila][columna].isFixa())
+                matriu[fila][columna].setValor(num);
             if(esFactible(posicio)) {
-                 // assignar el valor a la cel·la
-                Posicio aux = new Posicio(fila, columna + 1, DIMENSIO);
-                if(solucionaBacktracking(aux)) return true;
+                // si ja hem arribat al final de la matriu ja hem acabat, retornem per no fer més backtracking
+                if (posicio.comparar(8, 8)) {
+                    Eines.mostrarMatriu(matriu);
+                    return true;
+                }else{
+                    // assignar el valor a la cel·la
+                    Posicio aux = new Posicio(fila, columna + 1, DIMENSIO);
+                    if(solucionaBacktracking(aux)) return true;
+                    if(!matriu[aux.getFila()][aux.getColumna()].isFixa())
+                        matriu[aux.getFila()][aux.getColumna()].setValor(0); // tornar enrere per si ens hem equivocat
+                }
 
             }
-                matriu[fila][columna].setValor(0); // tornar enrere per si ens hem equivocat
-                matriu[fila][columna].setFixa(false);
+            if(matriu[fila][columna].isFixa()){
+                break;
+            }
         }
 
         return false;
@@ -53,7 +51,7 @@ public class SudokuBack {
         int columna = (posicio.getColumna()/3)*3;
         for(int fil=fila; fil<fila+3 && factible; fil++){
             for(int col=columna; col<columna+3 && factible; col++){
-                if(fil != posicio.getFila() && col != posicio.getColumna() && matriu[fil][col].getValor()==matriu[posicio.getFila()][col].getValor())
+                if(!(fil == posicio.getFila() && col == posicio.getColumna()) && matriu[fil][col].getValor()==matriu[posicio.getFila()][posicio.getColumna()].getValor())
                     factible = false;
             }
         }
