@@ -1,6 +1,10 @@
 import java.io.IOException;
 import java.util.Scanner;
 
+/**
+ * Classe Proves: classe principal per fer el testeig de les dues aproximacions
+ *  (àvid i backtracking). Inclou un menú per consola.
+ */
 public class Proves {
     static Scanner teclat = new Scanner(System.in);
     public static void main(String[] args) {
@@ -9,7 +13,8 @@ public class Proves {
             Eines.mostrarMenu();
             opcio = teclat.next();
             switch(opcio) {
-                case "1": fitxer = Eines.demanarFitxer(teclat);
+                case "1": // Cas per resoldre el sudoku per l'estratègia àvida.
+                    fitxer = Eines.demanarFitxer(teclat);
                     SudokuAvid sudAv = new SudokuAvid();
                     try {
                         sudAv.inicialitzarMatriu(fitxer);
@@ -18,13 +23,15 @@ public class Proves {
                         if(sudAv.solucionaAvid()) {
                             System.out.println("\nSudoku resolt:");
                             Eines.mostrarMatriu(sudAv.getMatriu());
-                        }else
+                        }
+                        else
                             System.out.println("\nNo s'ha trobat una solució.");
                     } catch (IOException e) {
                         System.out.println("Error en el fitxer.");
                     }
                     break;
-                case "2": fitxer = Eines.demanarFitxer(teclat);
+                case "2": // Cas per resoldre el sudoku per l'estratègia backtracking.
+                    fitxer = Eines.demanarFitxer(teclat);
                     SudokuBacktracking sudBa = new SudokuBacktracking();
                     try {
                         sudBa.inicialitzarMatriu(fitxer);
@@ -36,12 +43,15 @@ public class Proves {
                         System.out.println("Error en el fitxer.");
                     }
                     break;
-                case "3": System.out.println("Obrint interfície gràfica...");
+                case "3": // Cas per obrir la interfície gràfica.
+                    System.out.println("Obrint interfície gràfica...");
                     new SudokuWindow();
                     break;
-                case "4": System.out.println("Sortint del programa...");
+                case "4": // Cas per sortir del programa.
+                    System.out.println("Sortint del programa...");
                     break;
-                default: System.out.println("Opció no vàlida.");
+                default: // Cas per defecte.
+                    System.out.println("Opció no vàlida.");
                     break;
             }
             if(!opcio.equals("4")) {

@@ -1,14 +1,27 @@
 import java.io.IOException;
-import java.util.LinkedHashSet;
 
+/**
+ * Classe SudokuBacktracking: classe que soluciona el sudoku per l'estratègia
+ * de cerca exhaustiva o backtracking.
+ */
 public class SudokuBacktracking {
     private static final int DIMENSIO = 9;
     private static Candidat[][] matriu = new Candidat[DIMENSIO][DIMENSIO];
 
+    /**
+     * Constructor de la matriu per SudokuBacktracking.
+     * @param fitxer String amb el nom del fitxer per carregar el sudoku.
+     * @throws IOException si hi ha problemes amb el fitxer.
+     */
     public void inicialitzarMatriu(String fitxer) throws IOException {
         Eines.llegirMatriu(fitxer, matriu);
     }
 
+    /**
+     * Mètode que resol el sudoku seguint l'estratègia de cerca exhaustiva.
+     * @param posicio Posicio amb la posició a tractar en aquella crida.
+     * @return cert si s'ha pogut resoldre, fals altrament.
+     */
     public boolean solucionaBacktracking(Posicio posicio) {
         int fila = posicio.getFila(), columna = posicio.getColumna();
 
@@ -36,10 +49,20 @@ public class SudokuBacktracking {
         return false;
     }
 
+    /**
+     * Mètode que analitza si el candidat escollit és vàlid.
+     * @param posicio Posicio actual.
+     * @return cert si és factible, fals altrament.
+     */
     private boolean esFactible(Posicio posicio) {
         return revisarFila(posicio) && revisarColumna(posicio) && revisarQuadrat(posicio);
     }
 
+    /**
+     * Mètode que comprova que no hi hagi el mateix nombre al quadrat.
+     * @param posicio Posicio actual.
+     * @return cert si no hi ha coincidència, fals altrament.
+     */
     private boolean revisarQuadrat(Posicio posicio) {
         boolean factible = true;
         int fila = (posicio.getFila()/3)*3;
@@ -53,6 +76,11 @@ public class SudokuBacktracking {
         return factible;
     }
 
+    /**
+     * Mètode que comprova que no hi hagi el mateix nombre a la columna.
+     * @param posicio Posicio actual.
+     * @return cert si no hi ha coincidència, fals altrament.
+     */
     private boolean revisarColumna(Posicio posicio) {
         boolean factible = true;
         int col = posicio.getColumna();
@@ -63,6 +91,11 @@ public class SudokuBacktracking {
         return factible;
     }
 
+    /**
+     * Mètode que comprova que no hi hagi el mateix nombre a la fila.
+     * @param posicio Posicio actual.
+     * @return cert si no hi ha coincidència, fals altrament.
+     */
     private boolean revisarFila(Posicio posicio) {
         boolean factible = true;
         int fil = posicio.getFila();
@@ -73,6 +106,10 @@ public class SudokuBacktracking {
         return factible;
     }
 
+    /**
+     * Getter de matriu.
+     * @return matriu de Candidat amb el sudoku.
+     */
     public Candidat[][] getMatriu() {
         return matriu;
     }
