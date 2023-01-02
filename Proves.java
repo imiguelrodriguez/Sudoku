@@ -1,6 +1,8 @@
 import java.io.IOException;
+import java.util.Scanner;
 
 public class Proves {
+    static Scanner teclat = new Scanner(System.in);
     public static void main(String[] args) {
         String fitxer, opcio;
         do {

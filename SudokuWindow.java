@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 
 public class SudokuWindow extends JFrame {
     private JButton [][] matriu;
