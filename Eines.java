@@ -135,7 +135,7 @@ public class Eines {
      * sudokus de prova del directori sudokus.
      */
     public static void analisiCost() {
-        System.out.println("A continuació es farà una anàlisi del cost temporal comparant ambdós algorismes.");
+        System.out.println("A continuació es farà una anàlisi del cost temporal comparant ambdós algorismes.\n");
         String[] fitxers = fitxersProva("sudokus");
         long tempsIni, tempsFi;
         if(fitxers != null) {
@@ -144,8 +144,8 @@ public class Eines {
                 fitxer.chars().forEach(car -> System.out.print("*"));
                 System.out.println("\n| " + fitxer + " |");
                 fitxer.chars().forEach(car -> System.out.print("*"));
-                System.out.print("****");
-                System.out.println("\n*** ESTRATÈGIA BACKTRACKING ***");
+                System.out.print("****\n");
+                System.out.println("\n*** ESTRATÈGIA BACKTRACKING ***\n");
                 SudokuBacktracking sudBa = new SudokuBacktracking();
                 try {
                     tempsIni = System.currentTimeMillis();
@@ -155,12 +155,12 @@ public class Eines {
                     if (!sudBa.solucionaBacktracking(new Posicio(0, 0)))
                         System.out.println("\nNo s'ha trobat una solució.");
                     tempsFi = System.currentTimeMillis();
-                    System.out.println("L'estratègia Backtracking ha trigat: " + (tempsFi-tempsIni) + " mil·lisegons.\n");
+                    System.out.println("\nL'estratègia Backtracking ha trigat: " + (tempsFi-tempsIni) + " mil·lisegons.\n");
                 } catch (IOException e) {
                     System.out.println("Error en el fitxer.");
                 }
 
-                System.out.println("*** ESTRATÈGIA ÀVIDA ***");
+                System.out.println("*** ESTRATÈGIA ÀVIDA ***\n");
                 SudokuAvid sudAv = new SudokuAvid();
                 try {
                     tempsIni = System.currentTimeMillis();
@@ -174,7 +174,7 @@ public class Eines {
                     else
                         System.out.println("\nNo s'ha trobat una solució.");
                     tempsFi = System.currentTimeMillis();
-                    System.out.println("L'estratègia Àvida ha trigat: " + (tempsFi-tempsIni) + " mil·lisegons.\n");
+                    System.out.println("\nL'estratègia Àvida ha trigat: " + (tempsFi-tempsIni) + " mil·lisegons.\n");
                 } catch (IOException e) {
                     System.out.println("Error en el fitxer.");
                 }
