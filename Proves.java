@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -47,17 +48,21 @@ public class Proves {
                     System.out.println("Obrint interfície gràfica...");
                     new SudokuWindow();
                     break;
-                case "4": // Cas per sortir del programa.
+                case "4": // Cas per fer l'anàlisi del cost temporal.
+                    System.out.println("*** ANÀLISI DEL COST TEMPORAL ***");
+                    Eines.analisiCost();
+                    break;
+                case "5": // Cas per sortir del programa.
                     System.out.println("Sortint del programa...");
                     break;
                 default: // Cas per defecte.
                     System.out.println("Opció no vàlida.");
                     break;
             }
-            if(!opcio.equals("4")) {
+            if(!opcio.equals("5")) {
                 System.out.println("\nPrem qualsevol tecla + ENTER per a continuar...");
                 teclat.next();
             }
-        } while(!opcio.equals("4"));
+        } while(!opcio.equals("5"));
     }
 }

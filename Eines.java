@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.io.File;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -95,7 +96,26 @@ public class Eines {
             }
         }
         else System.out.println("No existeix aquest directori.");
+    }
 
+    /**
+     * Mètode que busca tots els arxius que hi ha dins d'un directori específic per fer les proves temporals.
+     * @param directori String que indica el nom del directori on hi ha els fitxers.
+     * @return vector de String amb els noms dels fitxers de prova.
+     */
+    public static String[] fitxersProva(String directori){
+        File dir = new File(directori + "/");
+        String[] llista = dir.list();
+        if(llista!=null) {
+            Arrays.sort(llista);
+            for(int i = 0; i < llista.length; i++)
+                llista[i] = directori+"/"+llista[i];
+           return llista;
+        }
+        else {
+            System.out.println("No existeix aquest directori.");
+            return null;
+        }
     }
 
     /**
@@ -111,6 +131,58 @@ public class Eines {
     }
 
     /**
+     * Mètode que analitza el cost temporal d'ambdues estratègies amb els
+     * sudokus de prova del directori sudokus.
+     */
+    public static void analisiCost() {
+        System.out.println("A continuació es farà una anàlisi del cost temporal comparant ambdós algorismes.");
+        String[] fitxers = fitxersProva("sudokus");
+        long tempsIni, tempsFi;
+        if(fitxers != null) {
+            for (String fitxer : fitxers) {
+                System.out.print("****");
+                fitxer.chars().forEach(car -> System.out.print("*"));
+                System.out.println("\n| " + fitxer + " |");
+                fitxer.chars().forEach(car -> System.out.print("*"));
+                System.out.print("****");
+                System.out.println("\n*** ESTRATÈGIA BACKTRACKING ***");
+                SudokuBacktracking sudBa = new SudokuBacktracking();
+                try {
+                    tempsIni = System.currentTimeMillis();
+                    sudBa.inicialitzarMatriu(fitxer);
+                    System.out.println("Sudoku a resoldre:");
+                    Eines.mostrarMatriu(sudBa.getMatriu());
+                    if (!sudBa.solucionaBacktracking(new Posicio(0, 0)))
+                        System.out.println("\nNo s'ha trobat una solució.");
+                    tempsFi = System.currentTimeMillis();
+                    System.out.println("L'estratègia Backtracking ha trigat: " + (tempsFi-tempsIni) + " mil·lisegons.\n");
+                } catch (IOException e) {
+                    System.out.println("Error en el fitxer.");
+                }
+
+                System.out.println("*** ESTRATÈGIA ÀVIDA ***");
+                SudokuAvid sudAv = new SudokuAvid();
+                try {
+                    tempsIni = System.currentTimeMillis();
+                    sudAv.inicialitzarMatriu(fitxer);
+                    System.out.println("Sudoku a resoldre:");
+                    Eines.mostrarMatriu(sudAv.getMatriu());
+                    if(sudAv.solucionaAvid()) {
+                        System.out.println("\nSudoku resolt:");
+                        Eines.mostrarMatriu(sudAv.getMatriu());
+                    }
+                    else
+                        System.out.println("\nNo s'ha trobat una solució.");
+                    tempsFi = System.currentTimeMillis();
+                    System.out.println("L'estratègia Àvida ha trigat: " + (tempsFi-tempsIni) + " mil·lisegons.\n");
+                } catch (IOException e) {
+                    System.out.println("Error en el fitxer.");
+                }
+            }
+        }
+    }
+
+    /**
      * Mètode que mostra el menú principal.
      */
     public static void mostrarMenu() {
@@ -121,6 +193,7 @@ public class Eines {
         System.out.println("1. Resoldre per algorisme voraç.");
         System.out.println("2. Resoldre per backtracking.");
         System.out.println("3. Obrir interfície gràfica.");
-        System.out.println("4. Sortir\n");
+        System.out.println("4. Anàlisi del cost temporal.");
+        System.out.println("5. Sortir\n");
     }
 }
