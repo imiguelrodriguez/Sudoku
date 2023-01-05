@@ -1,10 +1,11 @@
+import javax.swing.*;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.io.File;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -12,6 +13,7 @@ import java.util.Scanner;
  * No té constructor perquè es farà servir com a llibreria.
  */
 public class Eines {
+    private static SudokuBacktracking sudBa;
     /**
      * Mètode sobrecarregat que llegeix un sudoku de fitxer i el carrega en la variable matriu.
      * @param fitxer String amb el nom del fitxer a carregar.
@@ -132,7 +134,7 @@ public class Eines {
 
     /**
      * Mètode que analitza el cost temporal d'ambdues estratègies amb els
-     * sudokus de prova del directori sudokus.
+     * sudokus de prova del directori sudokus (opció 4 del menú).
      */
     public static void analisiCost() {
         System.out.println("A continuació es farà una anàlisi del cost temporal comparant ambdós algorismes.\n");
@@ -195,5 +197,40 @@ public class Eines {
         System.out.println("3. Obrir interfície gràfica.");
         System.out.println("4. Anàlisi del cost temporal.");
         System.out.println("5. Sortir\n");
+    }
+
+    public static void carregarSudoku(SudokuWindow finestra, String path) throws IOException {
+        sudBa = new SudokuBacktracking();
+        Eines.llegirMatriu(path, sudBa.getMatriu());
+        JFormattedTextField[][] matriu = finestra.getMatriu();
+
+        for(int i = 0; i < 9; i++) {
+            for(int j = 0; j < 9; j++) {
+                if(sudBa.getMatriu()[i][j].getValor()!=0) {
+                    matriu[i][j].setValue(null); // esborra el que hi hagués abans
+                    matriu[i][j].setBackground(Color.white);
+                    matriu[i][j].setText(String.valueOf(sudBa.getMatriu()[i][j].getValor()));
+                    matriu[i][j].setBackground(Color.GRAY);
+                    matriu[i][j].setEditable(false);
+                }
+                else {
+                    matriu[i][j].setEditable(true);
+                    matriu[i][j].setValue(null); // esborra el que hi hagués abans
+                    matriu[i][j].setBackground(Color.white);
+                }
+            }
+        }
+    }
+
+    public static void solucionaFinestra(SudokuWindow finestra) {
+        sudBa.solucionaBacktracking(new Posicio(0, 0));
+        JFormattedTextField[][] matriu = finestra.getMatriu();
+
+        for(int i = 0; i < 9; i++) {
+            for(int j = 0; j < 9; j++) {
+                matriu[i][j].setText(String.valueOf(sudBa.getMatriu()[i][j].getValor()));
+                matriu[i][j].setEditable(false);
+            }
+        }
     }
 }
