@@ -199,6 +199,12 @@ public class Eines {
         System.out.println("5. Sortir\n");
     }
 
+    /**
+     * Mètode que carrega un sudoku en la finestra principal.
+     * @param finestra instància de SudokuWindow.
+     * @param path String amb la ruta de l'arxiu on hi ha definit el Sudoku.
+     * @throws IOException si hi ha problemes amb el fitxer.
+     */
     public static void carregarSudoku(SudokuWindow finestra, String path) throws IOException {
         sudBa = new SudokuBacktracking();
         Eines.llegirMatriu(path, sudBa.getMatriu());
@@ -222,6 +228,10 @@ public class Eines {
         }
     }
 
+    /**
+     * Mètode que soluciona el Sudoku que hi ha carregat a la finestra.
+     * @param finestra instància de SudokuWindow.
+     */
     public static void solucionaFinestra(SudokuWindow finestra) {
         sudBa.solucionaBacktracking(new Posicio(0, 0));
         JFormattedTextField[][] matriu = finestra.getMatriu();
