@@ -1,5 +1,7 @@
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
@@ -13,10 +15,11 @@ import java.text.NumberFormat;
  * Classe SudokuWindow: permet carregar sudokus i visualitzar-los. També permet anar resolent-los i veure la solució.
  */
 public class SudokuWindow extends JFrame {
+
     private JFormattedTextField [][] matriu = new JFormattedTextField[9][9];
     private JPanel panellCaselles = new JPanel();
     private JPanel panellOpcions = new JPanel();
-    private JButton butoCarrega, butoSolucio, butoComprova;
+    private JButton butoCarrega, butoSolucio, butoComprovar;
     private String titol = "Finestra Sudoku";
 
     public SudokuWindow(){
@@ -29,7 +32,7 @@ public class SudokuWindow extends JFrame {
         this.setLayout(new BorderLayout());
 
         panellCaselles.setLayout(new GridLayout(9,9));
-        panellOpcions.setLayout(new GridLayout(1, 3));
+        panellOpcions.setLayout(new GridLayout(1, 2));
 
         Font font1 = new Font("SansSerif", Font.BOLD, 25);
         NumberFormat format = NumberFormat.getInstance();
@@ -41,6 +44,7 @@ public class SudokuWindow extends JFrame {
         formatter.setAllowsInvalid(true);
         formatter.setCommitsOnValidEdit(false);
 
+        JFormattedTextField aux;
         for (int i=0; i<9; i++)
             for (int j=0; j<9; j++) {
                 matriu[i][j] = new JFormattedTextField(formatter);
@@ -48,14 +52,46 @@ public class SudokuWindow extends JFrame {
                 matriu[i][j].setFont(font1);
                 matriu[i][j].setBackground(Color.white);
                 matriu[i][j].setEditable(false);
+                aux = matriu[i][j];
+                JFormattedTextField finalAux = aux;
+                int finalI = i;
+                int finalJ = j;
+                matriu[i][j].getDocument().addDocumentListener(new DocumentListener() {
+                    public void changedUpdate(DocumentEvent e) {
+
+                        updateCell();
+                    }
+                    public void removeUpdate(DocumentEvent e) {
+                        if(!finalAux.getBackground().equals(Color.gray)) {
+                            finalAux.setValue(null);
+                            Eines.getSudBa().getMatriu()[finalI][finalJ].setValor(0);
+                            finalAux.setBackground(Color.white);
+                        }
+
+                    }
+                    public void insertUpdate(DocumentEvent e) {
+                        if(!finalAux.getBackground().equals(Color.gray)) updateCell();
+                    }
+
+                    public void updateCell() {
+                        finalAux.setBackground(Color.white);
+                        boolean factible;
+                        factible = Eines.revisarQuadrat(finalI, finalJ, Integer.parseInt(finalAux.getText())) && Eines.revisarFila(finalI, finalJ, Integer.parseInt(finalAux.getText())) && Eines.revisarColumna(finalI, finalJ, Integer.parseInt(finalAux.getText()));
+                        if(factible) {
+                            Eines.getSudBa().getMatriu()[finalI][finalJ].setValor(Integer.parseInt(finalAux.getText()));
+                        }
+                        else finalAux.setBackground(Color.RED);
+                    }
+                });
+
                 panellCaselles.add(matriu[i][j]);
             }
 
         Eines.pintarQuadrats(finestra);
 
         this.butoCarrega = new JButton("Carrega Sudoku");
-        this.butoComprova = new JButton("Comprova");
         this.butoSolucio = new JButton("Soluciona");
+        this.butoComprovar = new JButton("Comprova");
 
 
         this.panellOpcions.add(butoCarrega);
@@ -65,6 +101,7 @@ public class SudokuWindow extends JFrame {
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
                 fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("CSV Documents", "csv"));
+                fileChooser.setAcceptAllFileFilterUsed(false);
                 int result = fileChooser.showOpenDialog(null);
                 if (result == JFileChooser.APPROVE_OPTION) {
                     File selectedFile = fileChooser.getSelectedFile();
@@ -76,7 +113,19 @@ public class SudokuWindow extends JFrame {
                 }
             }
         });
-        this.panellOpcions.add(butoComprova);
+
+        this.panellOpcions.add(butoComprovar);
+        butoComprovar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                boolean solucio = Eines.comprovaSolucio();
+                if(solucio)
+                    JOptionPane.showMessageDialog(finestra, "Solució correcta!", "Molt bé", JOptionPane.PLAIN_MESSAGE);
+                else JOptionPane.showMessageDialog(finestra, "Solució incorrecta! Torna a provar.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
         this.panellOpcions.add(butoSolucio);
         butoSolucio.addActionListener(new ActionListener() {
             @Override
@@ -84,6 +133,9 @@ public class SudokuWindow extends JFrame {
                 Eines.solucionaFinestra(finestra);
             }
         });
+
+
+
         this.add(panellCaselles, BorderLayout.CENTER);
         this.add(panellOpcions, BorderLayout.SOUTH);
 

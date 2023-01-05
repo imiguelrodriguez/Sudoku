@@ -8,6 +8,6 @@ This is a Sudoku resolver. It uses two different strategies to solve them:
 2. Backtracking algorithm (SudokuBacktracking).
 
 Several sudokus are defined in the sudokus directory (.csv files), with which the program will be tested.
-
+It also allows to visualize it in screen, with SudokuWindow class.
 
 **Authors:** Ignacio Miguel Rodríguez ([see profile](https://github.com/imiguelrodriguez/)) and Said Trujillo de León ([see profile](https://github.com/31ldts)).

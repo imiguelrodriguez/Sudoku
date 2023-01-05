@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -245,6 +244,10 @@ public class Eines {
         }
     }
 
+    /**
+     * Mètode que pinta els quadrats del Sudoku a la finestra.
+     * @param finestra instància de SudokuWindow.
+     */
     public static void pintarQuadrats (SudokuWindow finestra) {
         JFormattedTextField[][] matriu = finestra.getMatriu();
         for(int i = 0; i < 9; i++) {
@@ -258,9 +261,59 @@ public class Eines {
                     matriu[i][j].setBorder(BorderFactory.createCompoundBorder(matriu[i][j].getBorder(), BorderFactory.createMatteBorder(0, 3, 0, 0, Color.black)));
                 if (j == 8)
                     matriu[i][j].setBorder(BorderFactory.createCompoundBorder(matriu[i][j].getBorder(), BorderFactory.createMatteBorder(0, 0, 0, 3, Color.black)));
-
             }
         }
+    }
 
+    public static SudokuBacktracking getSudBa() {
+        return sudBa;
+    }
+
+    public static boolean revisarQuadrat(int i, int j, int valor) {
+        boolean factible = true;
+        int fila = (i/3)*3;
+        int columna = (j/3)*3;
+        for(int fil=fila; fil<fila+3 && factible; fil++){
+            for(int col=columna; col<columna+3 && factible; col++){
+                if(!(fil == i && col == j) && sudBa.getMatriu()[fil][col].getValor()== valor)
+                    factible = false;
+            }
+        }
+        return factible;
+    }
+
+    public static boolean revisarFila(int i, int j, int valor) {
+        boolean factible = true;
+        int fil = i;
+        for(int col = 0; col < 9 && factible; col++){
+            if(col != j && sudBa.getMatriu()[fil][col].getValor()== valor)
+                factible = false;
+        }
+        return factible;
+    }
+
+    public static boolean revisarColumna(int i, int j, int valor) {
+        boolean factible = true;
+        int col = j;
+        for(int fil = 0; fil < 9 && factible; fil++){
+            if(fil != i && sudBa.getMatriu()[fil][col].getValor()== valor)
+                factible = false;
+        }
+        return factible;
+    }
+
+    /**
+     * Mètode que comprova que una solució sigui correcta. Utilitzat des de SudokuWindow.
+     * @return cert si és correcta, fals altrament.
+     */
+    public static boolean comprovaSolucio() {
+        boolean factible = true;
+        for(int i = 0; i < 9; i++) {
+            for(int j = 0; j < 9; j++) {
+                factible =  revisarColumna(i, j, sudBa.getMatriu()[i][j].getValor()) && revisarFila(i, j, sudBa.getMatriu()[i][j].getValor()) && revisarQuadrat(i, j, sudBa.getMatriu()[i][j].getValor());
+                if(!factible) return false;
+            }
+        }
+        return true;
     }
 }
