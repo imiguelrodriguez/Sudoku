@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.MatteBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
@@ -24,7 +25,7 @@ public class SudokuWindow extends JFrame {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setSize(600,600);
         this.setResizable(false);
-
+        SudokuWindow finestra = this;
         this.setLayout(new BorderLayout());
 
         panellCaselles.setLayout(new GridLayout(9,9));
@@ -50,11 +51,13 @@ public class SudokuWindow extends JFrame {
                 panellCaselles.add(matriu[i][j]);
             }
 
+        Eines.pintarQuadrats(finestra);
+
         this.butoCarrega = new JButton("Carrega Sudoku");
         this.butoComprova = new JButton("Comprova");
         this.butoSolucio = new JButton("Soluciona");
 
-        SudokuWindow finestra = this;
+
         this.panellOpcions.add(butoCarrega);
         butoCarrega.addActionListener(new ActionListener() {
             @Override

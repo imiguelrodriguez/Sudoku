@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -242,5 +243,24 @@ public class Eines {
                 matriu[i][j].setEditable(false);
             }
         }
+    }
+
+    public static void pintarQuadrats (SudokuWindow finestra) {
+        JFormattedTextField[][] matriu = finestra.getMatriu();
+        for(int i = 0; i < 9; i++) {
+            for(int j = 0; j < 9; j++) {
+                if(i == 0 || i == 3 || i == 6)
+                    matriu[i][j].setBorder(BorderFactory.createCompoundBorder(matriu[i][j].getBorder(), BorderFactory.createMatteBorder(3, 0, 0, 0, Color.black)));
+                if(i == 8)
+                    matriu[i][j].setBorder(BorderFactory.createCompoundBorder(matriu[i][j].getBorder(), BorderFactory.createMatteBorder(0, 0, 3, 0, Color.black)));
+
+                if(j == 0 || j == 3 || j == 6)
+                    matriu[i][j].setBorder(BorderFactory.createCompoundBorder(matriu[i][j].getBorder(), BorderFactory.createMatteBorder(0, 3, 0, 0, Color.black)));
+                if (j == 8)
+                    matriu[i][j].setBorder(BorderFactory.createCompoundBorder(matriu[i][j].getBorder(), BorderFactory.createMatteBorder(0, 0, 0, 3, Color.black)));
+
+            }
+        }
+
     }
 }
