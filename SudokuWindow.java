@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.border.MatteBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -21,6 +20,7 @@ public class SudokuWindow extends JFrame {
     private JPanel panellOpcions = new JPanel();
     private JButton butoCarrega, butoSolucio, butoComprovar;
     private String titol = "Finestra Sudoku";
+    private boolean solucio = false;
 
     public SudokuWindow(){
         super();
@@ -62,7 +62,7 @@ public class SudokuWindow extends JFrame {
                         updateCell();
                     }
                     public void removeUpdate(DocumentEvent e) {
-                        if(!finalAux.getBackground().equals(Color.gray)) {
+                        if(!finalAux.getBackground().equals(Color.gray) && !solucio) {
                             finalAux.setValue(null);
                             Eines.getSudBa().getMatriu()[finalI][finalJ].setValor(0);
                             finalAux.setBackground(Color.white);
@@ -77,10 +77,11 @@ public class SudokuWindow extends JFrame {
                         finalAux.setBackground(Color.white);
                         boolean factible;
                         factible = Eines.revisarQuadrat(finalI, finalJ, Integer.parseInt(finalAux.getText())) && Eines.revisarFila(finalI, finalJ, Integer.parseInt(finalAux.getText())) && Eines.revisarColumna(finalI, finalJ, Integer.parseInt(finalAux.getText()));
-                        if(factible) {
-                            Eines.getSudBa().getMatriu()[finalI][finalJ].setValor(Integer.parseInt(finalAux.getText()));
+                        if(!solucio) {
+                            if (factible) {
+                                Eines.getSudBa().getMatriu()[finalI][finalJ].setValor(Integer.parseInt(finalAux.getText()));
+                            } else finalAux.setBackground(Color.RED);
                         }
-                        else finalAux.setBackground(Color.RED);
                     }
                 });
 
@@ -142,7 +143,19 @@ public class SudokuWindow extends JFrame {
         this.setVisible(true);
     }
 
+    /**
+     * Mètode que retorna la matriu de caselles de la finestra.
+     * @return matriu de JFormattedTextField.
+     */
     public JFormattedTextField[][] getMatriu() {
         return matriu;
+    }
+
+    /**
+     * Setter de solucio.
+     * @param solucio booleà que indica si l'usuari vol la solució del Sudoku.
+     */
+    public void setSolucio(boolean solucio) {
+        this.solucio = solucio;
     }
 }

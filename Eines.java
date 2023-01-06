@@ -14,6 +14,7 @@ import java.util.Scanner;
  */
 public class Eines {
     private static SudokuBacktracking sudBa;
+    private static SudokuBacktracking sudBaInicial;
     /**
      * Mètode sobrecarregat que llegeix un sudoku de fitxer i el carrega en la variable matriu.
      * @param fitxer String amb el nom del fitxer a carregar.
@@ -207,7 +208,9 @@ public class Eines {
      */
     public static void carregarSudoku(SudokuWindow finestra, String path) throws IOException {
         sudBa = new SudokuBacktracking();
+        sudBaInicial = new SudokuBacktracking();
         Eines.llegirMatriu(path, sudBa.getMatriu());
+        Eines.llegirMatriu(path, sudBaInicial.getMatriu());
         JFormattedTextField[][] matriu = finestra.getMatriu();
 
         for(int i = 0; i < 9; i++) {
@@ -233,12 +236,14 @@ public class Eines {
      * @param finestra instància de SudokuWindow.
      */
     public static void solucionaFinestra(SudokuWindow finestra) {
-        sudBa.solucionaBacktracking(new Posicio(0, 0));
+        finestra.setSolucio(true);
+        sudBaInicial.solucionaBacktracking(new Posicio(0, 0));
         JFormattedTextField[][] matriu = finestra.getMatriu();
 
         for(int i = 0; i < 9; i++) {
             for(int j = 0; j < 9; j++) {
-                matriu[i][j].setText(String.valueOf(sudBa.getMatriu()[i][j].getValor()));
+                matriu[i][j].setValue(null);
+                matriu[i][j].setText(String.valueOf(sudBaInicial.getMatriu()[i][j].getValor()));
                 matriu[i][j].setEditable(false);
             }
         }
@@ -265,10 +270,21 @@ public class Eines {
         }
     }
 
+    /**
+     * Getter de sudBa.
+     * @return instància de SudokuBacktracking.
+     */
     public static SudokuBacktracking getSudBa() {
         return sudBa;
     }
 
+    /**
+     * Mètode que revisa que no hi hagi coincidències al quadrat.
+     * @param i fila
+     * @param j columna
+     * @param valor el valor de la casella
+     * @return cert si és factible, fals altrament
+     */
     public static boolean revisarQuadrat(int i, int j, int valor) {
         boolean factible = true;
         int fila = (i/3)*3;
@@ -282,6 +298,13 @@ public class Eines {
         return factible;
     }
 
+    /**
+     * Mètode que revisa que no hi hagi coincidències a la fila.
+     * @param i fila
+     * @param j columna
+     * @param valor el valor de la casella
+     * @return cert si és factible, fals altrament
+     */
     public static boolean revisarFila(int i, int j, int valor) {
         boolean factible = true;
         int fil = i;
@@ -292,6 +315,13 @@ public class Eines {
         return factible;
     }
 
+    /**
+     * Mètode que revisa que no hi hagi coincidències a la columna.
+     * @param i fila
+     * @param j columna
+     * @param valor el valor de la casella
+     * @return cert si és factible, fals altrament
+     */
     public static boolean revisarColumna(int i, int j, int valor) {
         boolean factible = true;
         int col = j;
